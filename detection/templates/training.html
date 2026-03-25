@@ -1,0 +1,306 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard - Real-Time Ad Fraud Detection</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <style>
+        .navbar-gradient {
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
+            transition: all 0.3s ease;
+        }
+
+        .hero-gradient {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        }
+
+        .navbar-sticky {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            background: rgba(30, 64, 175, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav-btn {
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(5px);
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .dashboard-card {
+            background: white;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            opacity: 0;
+            animation: fadeIn 1.2s ease-out forwards;
+        }
+
+        /* Staggered animation for hero elements */
+        .hero-gradient .animate-fade-in:nth-child(1) {
+            animation-delay: 0.3s;
+        }
+
+        .hero-gradient .animate-fade-in:nth-child(2) {
+            animation-delay: 0.6s;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+
+    <!-- Navbar -->
+   <nav id="navbar" class="navbar-gradient text-white p-5">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="text-3xl font-extrabold tracking-tight">
+                Real-Time Ad Fraud Detection
+            </div>
+        <div class="space-x-6">
+    <a href="{% url 'home' %}" class="nav-btn inline-block px-6 py-3 rounded-lg bg-blue-800 text-white">
+        <i class="fas fa-home mr-1"></i>Home
+    </a>
+    <a href="{% url 'training' %}" class="nav-btn inline-block px-6 py-3 rounded-lg bg-blue-800 text-white">
+        <i class="fas fa-book mr-1"></i>Training
+    </a>
+    <a href="{% url 'prediction' %}" class="nav-btn inline-block px-6 py-3 rounded-lg bg-blue-800 text-white">
+        <i class="fas fa-chart-line mr-1"></i>Detection
+    </a>
+</div>
+        </div>
+    </nav>
+<!-- Hero Section -->
+<section class="hero-gradient text-white py-36 text-center">
+    <div class="container mx-auto px-6 max-w-3xl">
+
+        <h1 class="text-4xl font-bold mb-8">Model Training</h1>
+
+        <!-- Training Button -->
+        <form method="post" class="mb-10">
+            {% csrf_token %}
+            <button
+                type="submit"
+                class="bg-white text-indigo-700 px-8 py-3 rounded-lg font-semibold shadow-lg hover:bg-gray-100 transition">
+                🚀 Start Training
+            </button>
+        </form>
+
+      {% if metrics %}
+<div class="bg-white text-gray-800 rounded-xl shadow-xl p-8 text-left">
+
+    <h2 class="text-2xl font-bold text-center mb-8">
+        📊 Training Results
+    </h2>
+
+    <!-- ================= RFC Metrics ================= -->
+    <div class="mb-6">
+        <h3 class="text-xl font-semibold text-indigo-600 mb-3">
+            🌳 Random Forest Classifier (RFC)
+        </h3>
+
+        <div class="space-y-1 text-lg">
+            <p>Accuracy:
+                <strong class="text-green-700">
+                    {{ metrics.rfc_accuracy }}%
+                </strong>
+            </p>
+            <p>Precision:
+                <strong class="text-blue-700">
+                    {{ metrics.rfc_precision }}%
+                </strong>
+            </p>
+            <p>Recall:
+                <strong class="text-purple-700">
+                    {{ metrics.rfc_recall }}%
+                </strong>
+            </p>
+            <p>F1 Score:
+                <strong class="text-yellow-700">
+                    {{ metrics.rfc_f1 }}%
+                </strong>
+            </p>
+        </div>
+    </div>
+
+    <hr class="my-6">
+
+    <!-- ================= LSTM Metrics ================= -->
+    <div class="mb-6">
+        <h3 class="text-xl font-semibold text-green-600 mb-3">
+            🔁 LSTM Network
+        </h3>
+
+        <div class="space-y-1 text-lg">
+            <p>Accuracy:
+                <strong class="text-green-700">
+                    {{ metrics.lstm_accuracy }}%
+                </strong>
+            </p>
+            <p>Precision:
+                <strong class="text-blue-700">
+                    {{ metrics.lstm_precision }}%
+                </strong>
+            </p>
+            <p>Recall:
+                <strong class="text-purple-700">
+                    {{ metrics.lstm_recall }}%
+                </strong>
+            </p>
+            <p>F1 Score:
+                <strong class="text-yellow-700">
+                    {{ metrics.lstm_f1 }}%
+                </strong>
+            </p>
+        </div>
+    </div>
+
+    <hr class="my-6">
+
+    <!-- ================= Hybrid Metrics ================= -->
+    <div class="bg-indigo-50 p-6 rounded-lg">
+        <h3 class="text-xl font-semibold text-indigo-800 mb-4">
+            🔗 Hybrid Model (RFC + LSTM)
+        </h3>
+
+        <div class="space-y-1 text-lg">
+            <p>Accuracy:
+                <strong class="text-green-700">
+                    {{ metrics.hybrid_accuracy }}%
+                </strong>
+            </p>
+            <p>Precision:
+                <strong class="text-blue-700">
+                    {{ metrics.hybrid_precision }}%
+                </strong>
+            </p>
+            <p>Recall:
+                <strong class="text-purple-700">
+                    {{ metrics.hybrid_recall }}%
+                </strong>
+            </p>
+            <p>F1 Score:
+                <strong class="text-yellow-700">
+                    {{ metrics.hybrid_f1 }}%
+                </strong>
+            </p>
+            <p>ROC-AUC:
+                <strong class="text-red-700">
+                    {{ metrics.hybrid_auc }}%
+                </strong>
+            </p>
+        </div>
+    </div>
+
+</div>
+{% endif %}
+
+
+  <!-- Back Button -->
+        <div class="mt-10">
+            <a href="{% url 'home' %}"
+               class="text-white underline hover:text-gray-200">
+                ⬅ Back to Home
+            </a>
+        </div>
+
+    </div>
+</section>
+
+
+    <!-- Dashboard Section -->
+   
+
+    <!-- About Section -->
+    <section id="about" class="py-24 bg-white">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-4xl font-bold mb-12 text-gray-800">About Our Project</h2>
+            <div class="dashboard-card max-w-3xl mx-auto p-10 rounded-xl shadow-lg">
+                <p class="text-gray-700 text-lg leading-relaxed">
+                    This project implements a hybrid machine learning approach for real-time advertising fraud detection, empowering users with accurate and instant insights. 
+                    Explore training datasets and perform live fraud detection to protect ad campaigns and optimize spending.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-10">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-sm">© 2025 Real-Time Ad Fraud Detection. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Sticky Navbar
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('navbar-sticky');
+            } else {
+                navbar.classList.remove('navbar-sticky');
+            }
+        });
+
+        // Smooth Scroll for Anchor Links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // 3D Tilt Effect for Buttons and Cards
+        document.querySelectorAll('.nav-btn, .dashboard-card').forEach(element => {
+            element.addEventListener('mousemove', (e) => {
+                const rect = element.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = (y - centerY) / 15;
+                const rotateY = (centerX - x) / 15;
+                element.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+            });
+            element.addEventListener('mouseleave', () => {
+                element.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>
